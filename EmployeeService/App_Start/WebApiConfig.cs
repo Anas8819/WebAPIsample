@@ -12,7 +12,6 @@ using System.Web.Http.Cors;
 
 namespace EmployeeService
 {
-    //fdvcws
     //public class CustomJsonFormeter : JsonMediaTypeFormatter
     //{
     //    public CustomJsonFormeter()
