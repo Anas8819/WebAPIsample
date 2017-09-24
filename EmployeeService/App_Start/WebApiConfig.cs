@@ -58,7 +58,7 @@ namespace EmployeeService
             //EnableCorsAttribute cors = new EnableCorsAttribute("*", "*", "*");
             //config.EnableCors(cors); for every controller
             config.EnableCors();//[EnableCorsAttribute ("*","*","*")] in controller we want to allow [DisableCors] to disable on a single function
-            config.Filters.Add(new RequireHttpsAttribute());
+            //config.Filters.Add(new RequireHttpsAttribute()); if want whole app to use https
 
         }
     }

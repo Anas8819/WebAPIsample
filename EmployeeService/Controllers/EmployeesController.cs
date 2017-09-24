@@ -6,29 +6,31 @@ using System.Net.Http;
 using System.Web.Http;
 using DataAccess;
 using System.Web.Http.Cors;
+using System.Threading;
 
 namespace EmployeeService.Controllers
 {
-    [EnableCorsAttribute ("*","*","*")] 
+    [RequireHttps]
+    [EnableCorsAttribute("*", "*", "*")]
     public class EmployeesController : ApiController
     {
-        public HttpResponseMessage GetAll(string gender="All")
+        [BasicAuthentication]
+        public HttpResponseMessage Get(string gender = "All")
         {
+            string username = Thread.CurrentPrincipal.Identity.Name;
+
             using (empEntities entities = new empEntities())
             {
-                switch(gender.ToLower())
+                switch (username.ToLower())
                 {
-                    case "all":
-                        return Request.CreateResponse(HttpStatusCode.OK, entities.tbl_employee.ToList());
                     case "male":
-                        return Request.CreateResponse(HttpStatusCode.OK, 
-                            entities.tbl_employee.Where(e=>e.Gender.ToLower()=="male").ToList());
+                        return Request.CreateResponse(HttpStatusCode.OK,
+                            entities.tbl_employee.Where(e => e.Gender.ToLower() == "male").ToList());
                     case "female":
                         return Request.CreateResponse(HttpStatusCode.OK,
                             entities.tbl_employee.Where(e => e.Gender.ToLower() == "female").ToList());
                     default:
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest,
-                            "Value for gender must be All, Male or Female. " + gender + " is invalid.");
+                        return Request.CreateResponse(HttpStatusCode.BadRequest);
                 }
             }
         }
@@ -37,9 +39,9 @@ namespace EmployeeService.Controllers
             using (empEntities entities = new empEntities())
             {
                 var entity = entities.tbl_employee.FirstOrDefault(e => e.Id == id);
-                if(entity!=null)
+                if (entity != null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, entity); 
+                    return Request.CreateResponse(HttpStatusCode.OK, entity);
                 }
                 else
                 {
@@ -94,14 +96,14 @@ namespace EmployeeService.Controllers
             }
         }
         [HttpPut]
-        public HttpResponseMessage Edit(int id,[FromBody] tbl_employee employee)
+        public HttpResponseMessage Edit(int id, [FromBody] tbl_employee employee)
         {
             try
             {
                 using (empEntities entities = new empEntities())
                 {
                     var entity = entities.tbl_employee.FirstOrDefault(e => e.Id == id);
-                    if(entity==null)
+                    if (entity == null)
                     {
                         return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Employee with ID" + id.ToString() + " not found");
                     }
@@ -109,7 +111,7 @@ namespace EmployeeService.Controllers
                     {
                         entity = employee;
                         entities.SaveChanges();
-                        return Request.CreateResponse(HttpStatusCode.OK,entity);
+                        return Request.CreateResponse(HttpStatusCode.OK, entity);
                     }
                     //entity.Id = employee.Id;
                     //entity.Name = employee.Name;

@@ -26,5 +26,6 @@ namespace DataAccess
         }
     
         public virtual DbSet<tbl_employee> tbl_employee { get; set; }
+        public virtual DbSet<tbl_users> tbl_users { get; set; }
     }
 }
