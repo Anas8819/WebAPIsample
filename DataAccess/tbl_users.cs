@@ -14,7 +14,7 @@ namespace DataAccess
     
     public partial class tbl_users
     {
-        public int Id { get; set; }
+        public Nullable<int> Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
     }
